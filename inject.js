@@ -1,10 +1,13 @@
-// Runs inside the app on every dashboard page: removes the "View website" link.
+// Runs inside the app on every dashboard page: removes the links that lead to the public website.
 (function () {
+  var RX = /^\s*(←\s*)?(view\s+(the\s+)?(web)?site|back\s+to\s+(the\s+)?(web)?site)/i;
   function run() {
     try {
       document.querySelectorAll('a').forEach(function (a) {
-        if (/^\s*view\s+(the\s+)?(web)?site/i.test(a.textContent || '')) {
+        if (RX.test(a.textContent || '')) {
           a.style.setProperty('display', 'none', 'important');
+          var p = a.parentElement;
+          if (p && p.classList.contains('auth-note')) p.style.setProperty('display', 'none', 'important');
         }
       });
     } catch (e) {}
