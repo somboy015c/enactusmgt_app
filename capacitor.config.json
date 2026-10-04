@@ -1,0 +1,23 @@
+{
+  "appId": "ng.enactus.admin",
+  "appName": "Enactus NG",
+  "webDir": "www",
+  "backgroundColor": "#18130E",
+  "server": {
+    "androidScheme": "https",
+    "allowNavigation": []
+  },
+  "android": {
+    "backgroundColor": "#18130E",
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false,
+      "launchShowDuration": 0,
+      "backgroundColor": "#18130E",
+      "showSpinner": false,
+      "androidScaleType": "CENTER_CROP"
+    }
+  }
+}
