@@ -49,6 +49,15 @@ jobs:
       - name: Sync web files
         run: npx cap sync android
 
+      - name: Hide the "View website" link inside the app
+        run: |
+          ORIGIN=$(node -e "const c=require('./capacitor.config.json');console.log('https://'+c.server.allowNavigation[0])")
+          mkdir -p android/app/src/main/assets android/app/src/main/java/ng/enactus/admin
+          cp inject.js android/app/src/main/assets/inject.js
+          sed "s#__ORIGIN__#$ORIGIN#" android-patch/MainActivity.java > android/app/src/main/java/ng/enactus/admin/MainActivity.java
+          sed -i '0,/^dependencies {/s//dependencies {\n    implementation "androidx.webkit:webkit:1.12.1"/' android/app/build.gradle
+          grep -q "androidx.webkit" android/app/build.gradle
+
       - name: Build release APK
         working-directory: android
         run: |
