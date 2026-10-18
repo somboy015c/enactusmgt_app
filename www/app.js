@@ -85,7 +85,7 @@
 
   // ---- Boot: splash -> (onboarding on first launch) -> dashboard
   async function boot() {
-    try { const P = window.Capacitor && window.Capacitor.Plugins; P && P.SplashScreen && P.SplashScreen.hide({ fadeOutDuration: 200 }); } catch (e) {}
+    try { const C = window.Capacitor; const SP = C && ((C.Plugins && C.Plugins.SplashScreen) || (C.registerPlugin && C.registerPlugin('SplashScreen'))); SP && SP.hide({ fadeOutDuration: 200 }); } catch (e) {}
     go(0);
     await sleep(2800);
     if (store.get(KEY)) openAdmin(); else show('onboarding');
