@@ -38,6 +38,11 @@ jobs:
       - name: Create the Android project
         run: npx cap add android
 
+      - name: Number this build so it installs over the previous one
+        run: |
+          sed -i -E "s/versionCode [0-9]+/versionCode ${{ github.run_number }}/; s/versionName \"[^\"]*\"/versionName \"1.0.${{ github.run_number }}\"/" android/app/build.gradle
+          grep -nE "versionCode|versionName" android/app/build.gradle
+
       - name: Generate icons and splash screen
         run: |
           mkdir -p assets
@@ -55,14 +60,20 @@ jobs:
           mkdir -p android/app/src/main/assets android/app/src/main/java/ng/enactus/admin
           cp inject.js android/app/src/main/assets/inject.js
           sed "s#__ORIGIN__#$ORIGIN#" android-patch/MainActivity.java > android/app/src/main/java/ng/enactus/admin/MainActivity.java
-          sed -i '0,/^dependencies {/s//dependencies {\n    implementation "androidx.webkit:webkit:1.12.1"/' android/app/build.gradle
+          sed "s#__ORIGIN__#$ORIGIN#" android-patch/MainActivityBasic.java > MainActivityBasic.generated
+          sed -i '0,/^dependencies {/s//dependencies {\n    implementation "androidx.webkit:webkit:1.12.1"\n    implementation("com.journeyapps:zxing-android-embedded:4.3.0") { transitive = false }\n    implementation "com.google.zxing:core:3.3.0"/' android/app/build.gradle
           grep -q "androidx.webkit" android/app/build.gradle
+          grep -q "zxing-android-embedded" android/app/build.gradle
 
       - name: Build release APK
-        working-directory: android
         run: |
-          chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon
+          cd android && chmod +x gradlew
+          if ! ./gradlew assembleRelease --no-daemon; then
+            echo "::warning::Build with the camera scanner failed - building without the scanner (the Nationals desk then uses the browser scanner)."
+            cp ../MainActivityBasic.generated app/src/main/java/ng/enactus/admin/MainActivity.java
+            sed -i '/zxing/d' app/build.gradle
+            ./gradlew assembleRelease --no-daemon
+          fi
 
       - name: Sign APK
         run: |
