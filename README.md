@@ -18,3 +18,11 @@ Everything is built by GitHub Actions – you never run a command.
 ## Notes
 - Keep the repository **private**: `signing/enactus.keystore` is the key that signs your APK. Every release uses the same key, so new versions install over old ones.
 - The dashboard is a live PHP site, so the app needs an internet connection.
+
+## What's new (v56 refresh)
+- Built from the latest Enactus website (ID cards, Nationals changes, My ID card, approvals).
+- Bulk ID-card PDFs and "download all staff cards" now save to the phone's Downloads folder.
+- The Nationals check-in desk **Scan** button opens the phone camera (built-in QR scanner). Allow the Camera permission when asked.
+- Each build gets a higher version number, so the new APK installs over the old app (no uninstall needed).
+- The dashboard hides "View website" / "Download the app" links inside the app (requires the v56 website files to be uploaded first).
+- If the scanner fails to compile, the build automatically continues without it and the desk uses the browser scanner instead (see the build log warning).

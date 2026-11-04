@@ -9,7 +9,8 @@
   },
   "android": {
     "backgroundColor": "#18130E",
-    "allowMixedContent": false
+    "allowMixedContent": false,
+    "appendUserAgent": "EnactusNGApp"
   },
   "plugins": {
     "SplashScreen": {
